@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alan Lin</title>
+<meta name="description" content="Alan Lin: projects, research and a little about me.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Alan Lin">
+<meta property="og:description" content="Projects, research and a little about me.">
+<meta property="og:url" content="https://uhonglim.github.io/">
+<meta property="og:image" content="https://uhonglim.github.io/alan.jpg">
+<link rel="canonical" href="https://uhonglim.github.io/">
+<meta name="twitter:card" content="summary">
+<script>
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+  /*
+    Palette: ~90% warm neutrals, a whisper of blue hour / blush / sunset,
+    and Hermès orange only on links and one small button.
+  */
+  :root {
+    --bg: #ffffff;
+    --text: #2a2826;
+    --muted: #6b665f;
+    --faint: #78736c;
+    --rule: #eeebe6;
+    --hover: #f7f5f2;
+
+    --twilight: #66728a;   /* role lines */
+    --blush: #f6eceb;      /* active nav */
+    --orange: #bf5317;     /* links, contact */
+
+    --sky-1: rgba(140, 160, 205, 0.10);
+    --sky-2: rgba(238, 196, 196, 0.10);
+    --sky-3: rgba(246, 190, 140, 0.06);
+
+    --bar: rgba(255, 255, 255, 0.82);
+    --sans: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    --maxw: 1000px;
+    --bar-h: 60px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151515;
+      --text: #ebe8e3;
+      --muted: #a29d96;
+      --faint: #8c877f;
+      --rule: #272625;
+      --hover: #1e1d1c;
+      --twilight: #98a3bb;
+      --blush: #2a2324;
+      --orange: #f0884a;
+      --sky-1: rgba(90, 110, 160, 0.14);
+      --sky-2: rgba(160, 110, 120, 0.08);
+      --sky-3: rgba(190, 120, 70, 0.05);
+      --bar: rgba(21, 21, 21, 0.8);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151515;
+    --text: #ebe8e3;
+    --muted: #a29d96;
+    --faint: #8c877f;
+    --rule: #272625;
+    --hover: #1e1d1c;
+    --twilight: #98a3bb;
+    --blush: #2a2324;
+    --orange: #f0884a;
+    --sky-1: rgba(90, 110, 160, 0.14);
+    --sky-2: rgba(160, 110, 120, 0.08);
+    --sky-3: rgba(190, 120, 70, 0.05);
+    --bar: rgba(21, 21, 21, 0.8);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--bar-h) + 28px); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.8 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+  /* Blue-hour haze at the very top of the page; fades out before the first section. */
+  body::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 560px; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(55% 70% at 12% 0%, var(--sky-1), transparent 70%),
+      radial-gradient(45% 60% at 70% 0%, var(--sky-2), transparent 70%),
+      radial-gradient(35% 50% at 95% 10%, var(--sky-3), transparent 70%);
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--blush); }
+
+  /* ---------- Top bar ---------- */
+  .bar {
+    position: sticky; top: 0; z-index: 50;
+    height: var(--bar-h);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: border-color .25s ease, background-color .25s ease;
+  }
+  .bar.scrolled {
+    background: var(--bar);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    backdrop-filter: saturate(160%) blur(14px);
+    border-bottom-color: var(--rule);
+  }
+  .bar-inner {
+    max-width: var(--maxw); height: 100%; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { font-size: 15.5px; font-weight: 600; letter-spacing: 0.01em; white-space: nowrap; flex-shrink: 0; }
+
+  .nav { display: flex; align-items: center; gap: 2px; }
+  .nav a {
+    padding: 5px 12px; border-radius: 999px;
+    font-size: 13.5px; color: var(--muted); white-space: nowrap;
+    transition: color .15s ease, background-color .15s ease;
+  }
+  .nav a:hover { color: var(--text); }
+  .nav a.active { color: var(--text); background: var(--blush); }
+
+  .bar-actions { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: grid; place-items: center;
+    border: 0; background: transparent; color: var(--muted);
+    cursor: pointer; transition: color .15s ease, background-color .15s ease;
+  }
+  .icon-btn:hover { color: var(--text); background: var(--hover); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .contact-btn {
+    font-size: 13.5px; color: var(--orange);
+    padding: 4px 13px; border: 1px solid var(--rule); border-radius: 999px;
+    transition: border-color .15s ease;
+  }
+  .contact-btn:hover { border-color: var(--orange); }
+  .menu-btn { display: none; }
+  .nav a.nav-email { display: none; }
+  :focus-visible { outline: 1.5px solid var(--twilight); outline-offset: 3px; border-radius: 6px; }
+  .icon-moon { display: none; }
+  :root[data-theme="dark"] .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-moon { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .icon-sun { display: none; }
+    :root:not([data-theme="light"]) .icon-moon { display: block; }
+  }
+
+  /* ---------- Page ---------- */
+  main { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  .hero {
+    padding: 104px 0 96px;
+    display: grid; grid-template-columns: 1fr 220px; gap: 64px; align-items: center;
+  }
+  .hero-text { grid-column: 1; grid-row: 1; }
+  .portrait {
+    grid-column: 2; grid-row: 1;
+    display: block; width: 220px; height: auto; aspect-ratio: 4 / 5;
+    object-fit: cover; object-position: 30% 35%;
+    border-radius: 14px;
+    background: var(--hover);
+  }
+  .hero h1 {
+    font-size: clamp(34px, 4.6vw, 46px); line-height: 1.2; font-weight: 500;
+    letter-spacing: -0.01em; margin: 0 0 22px;
+  }
+  .hero p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.85; max-width: 470px; }
+
+  section { padding: 64px 0; border-top: 1px solid var(--rule); }
+  section > h2 {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+    color: var(--faint); margin: 0 0 36px;
+  }
+
+  .prose { max-width: 620px; }
+  .prose p { margin: 0 0 20px; font-size: 16px; }
+  .prose p:last-child { margin-bottom: 0; }
+  .langs { list-style: none; margin: 0; padding: 0; max-width: 420px; }
+  .langs li {
+    display: grid; grid-template-columns: 120px 1fr auto; align-items: baseline; gap: 16px;
+    padding: 13px 0;
+  }
+  .langs li + li { border-top: 1px solid var(--rule); }
+  .langs li:first-child { padding-top: 0; }
+  .langs b { font-weight: 500; font-size: 16px; }
+  .langs span { color: var(--muted); font-size: 15px; }
+  .langs em { font-style: normal; font-size: 20px; line-height: 1; color: var(--faint); }
+
+  .entry { padding: 0 0 40px; max-width: 680px; }
+  .entry:last-child { padding-bottom: 0; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .entry h3 { margin: 0; font-size: 17px; font-weight: 500; line-height: 1.5; }
+  .entry h3 a { transition: color .15s ease; }
+  .entry h3 a:hover { color: var(--orange); }
+  .when { flex-shrink: 0; font-size: 13px; color: var(--faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .role { margin: 2px 0 10px; font-size: 14px; color: var(--twilight); }
+  .entry p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+  .entry .src { margin-top: 10px; font-size: 13.5px; }
+  .src a { color: var(--orange); }
+  .src a:hover { opacity: .75; }
+
+  .rows { list-style: none; margin: 0; padding: 0; max-width: 680px; }
+  .rows li {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding: 13px 0; font-size: 15px;
+  }
+  .rows li + li { border-top: 1px solid var(--rule); }
+  .rows li:first-child { padding-top: 0; }
+  .rows b { font-weight: 500; }
+  .rows .what span { color: var(--muted); margin-left: 4px; }
+
+  footer { max-width: var(--maxw); margin: 0 auto; padding: 64px 24px 72px; border-top: 1px solid var(--rule); }
+  footer h2 { font-size: 22px; font-weight: 500; letter-spacing: -0.005em; margin: 0 0 10px; }
+  footer p { margin: 0; color: var(--muted); font-size: 15px; }
+  .contact { list-style: none; margin: 28px 0 0; padding: 0; font-size: 15px; }
+  .contact li { display: flex; align-items: baseline; padding: 5px 0; }
+  .contact span { flex: 0 0 104px; font-size: 13px; color: var(--faint); }
+  .contact a, .contact .copy { color: var(--text); transition: color .15s ease; }
+  .contact a.accent { color: var(--orange); }
+  .contact a:hover, .contact .copy:hover { color: var(--orange); }
+  .contact a.accent:hover { opacity: .75; }
+  .copy { font: inherit; padding: 0; border: 0; background: none; cursor: pointer; }
+  .copy.done::after { content: "  Copied"; color: var(--faint); font-size: 13px; white-space: pre; }
+  footer small { display: block; margin-top: 56px; color: var(--faint); font-size: 12.5px; }
+
+  /* ---------- Music ---------- */
+  .songs { list-style: none; margin: 0; padding: 0; max-width: 680px; }
+  .songs li { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 13px 0; }
+  .songs li + li { border-top: 1px solid var(--rule); }
+  .songs li:first-child { padding-top: 0; }
+  .song b { font-weight: 500; font-size: 16px; }
+  .song span { color: var(--muted); font-size: 15px; margin-left: 12px; }
+  .listen { display: flex; gap: 16px; flex-shrink: 0; font-size: 13px; }
+  .listen a { color: var(--faint); transition: color .15s ease; }
+  .listen a:hover { color: var(--orange); }
+
+  /* ---------- Photos ---------- */
+  .photos-note { margin: -20px 0 28px; color: var(--muted); font-size: 15px; }
+  .gallery { columns: 3; column-gap: 20px; }
+  .gallery figure { break-inside: avoid; margin: 0 0 24px; }
+  .gallery a { display: block; border-radius: 10px; overflow: hidden; background: var(--hover); }
+  .gallery img { display: block; width: 100%; height: auto; transition: opacity .2s ease; }
+  .gallery a:hover img { opacity: .9; }
+  .gallery figcaption {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 8px; font-size: 13px; color: var(--muted);
+  }
+  .gallery figcaption span { color: var(--faint); font-variant-numeric: tabular-nums; }
+
+  .lightbox {
+    max-width: min(92vw, 1100px); max-height: 92vh; width: auto;
+    padding: 0; border: 0; border-radius: 12px; overflow: visible;
+    background: transparent; color: #fff;
+  }
+  .lightbox::backdrop { background: rgba(18, 17, 16, 0.88); }
+  .lightbox img { display: block; max-width: min(92vw, 1100px); max-height: 84vh; width: auto; height: auto; border-radius: 10px; margin: 0 auto; }
+  .lb-cap { margin: 12px 0 0; text-align: center; font-size: 13.5px; color: rgba(255,255,255,0.75); }
+  .lb-close {
+    position: fixed; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 999px;
+    display: grid; place-items: center; border: 0; cursor: pointer;
+    background: rgba(255,255,255,0.12); color: #fff;
+  }
+  .lb-close:hover { background: rgba(255,255,255,0.2); }
+  .lb-close svg { width: 18px; height: 18px; }
+
+  /* ---------- Two-column grid on wider screens ----------
+     Section label on the left (stays in view while you read),
+     content on the right. Footer follows the same grid. */
+  @media (min-width: 861px) {
+    section, footer {
+      display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 48px;
+      align-items: start;
+    }
+    section > h2 {
+      grid-column: 1; grid-row: 1 / span 2; margin: 0; padding-top: 4px;
+      position: sticky; top: calc(var(--bar-h) + 28px);
+    }
+    section > :not(h2) { grid-column: 2; }
+    .photos-note { margin: 0 0 32px; }
+    /* Photos get the full width: label and note on one line, gallery below. */
+    #photos > h2 { grid-row: 1; position: static; }
+    #photos .photos-note { grid-row: 1; }
+    #photos .gallery { grid-column: 1 / -1; grid-row: 2; }
+    .prose, .entry, .rows, .songs { max-width: 680px; }
+
+    footer > * { grid-column: 2; }
+    footer h2 { grid-column: 1; grid-row: 1 / span 3; margin: 0; }
+    footer .contact { margin-top: 24px; }
+    footer small { margin-top: 48px; }
+  }
+
+  /* ---------- Menu button (below the width the 8 links need) ---------- */
+  @media (max-width: 1080px) {
+    .nav {
+      position: absolute; top: var(--bar-h); left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      padding: 8px 12px 14px;
+      background: var(--bg); border-bottom: 1px solid var(--rule);
+      opacity: 0; transform: translateY(-4px); pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .bar.open { background: var(--bg); border-bottom-color: var(--rule); }
+    .bar.open .nav { opacity: 1; transform: none; pointer-events: auto; }
+    .nav a { padding: 10px 12px; font-size: 16px; }
+    .contact-btn { display: none; }
+    .nav a.nav-email { display: block; color: var(--orange); margin-top: 6px; border-top: 1px solid var(--rule); border-radius: 0; padding-top: 14px; }
+    .menu-btn { display: grid; }
+  }
+
+  /* ---------- Phone ---------- */
+  @media (max-width: 760px) {
+    :root { --bar-h: 56px; }
+    .bar-inner { padding: 0 16px; }
+    main { padding: 0 16px; }
+    .hero { padding: 40px 0 56px; grid-template-columns: 1fr; gap: 28px; }
+    .portrait { grid-column: 1; grid-row: 1; width: 132px; }
+    .hero-text { grid-row: 2; }
+    section { padding: 48px 0; }
+    section > h2 { margin-bottom: 28px; }
+    .entry { padding-bottom: 32px; }
+    .entry-head, .rows li { flex-direction: column; gap: 0; }
+    .rows .what span { margin-left: 0; display: block; }
+    footer { padding: 48px 16px 48px; }
+    .songs li { flex-direction: column; gap: 4px; }
+    .gallery { columns: 2; column-gap: 12px; }
+    .gallery figure { margin-bottom: 18px; }
+    .gallery figcaption { flex-direction: column; gap: 0; font-size: 12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar">
+  <div class="bar-inner">
+    <a class="brand" href="#top">Alan Lin</a>
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#languages">Languages</a>
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="#economics">Economics</a>
+      <a href="#other">Other</a>
+      <a href="#awards">Awards</a>
+      <a href="#education">Education</a>
+      <a href="#photos">Photos</a>
+      <a href="#music">Music</a>
+      <a class="nav-email" href="mailto:linyufeng876@gmail.com">Email me</a>
+    </nav>
+    <div class="bar-actions">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <a class="contact-btn" href="mailto:linyufeng876@gmail.com">Contact</a>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="hero">
+    <img class="portrait" src="alan.jpg" alt="Alan Lin" width="768" height="1024">
+    <div class="hero-text">
+    <h1>Hi, I'm Alan.</h1>
+    <p>I like building things people use, taking things apart to see how they work, and asking what a number leaves out.</p>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2>About</h2>
+    <div class="prose">
+      <p>My interest in data started with soccer. When a player lost the ball on a risky pass, I wanted to know whether it was a bad decision or a reasonable gamble, and passing accuracy couldn't tell me. Since then I've paid attention to what a number leaves out, and that question runs through most of my research.</p>
+      <p>I like taking things apart. It started with a 30-year-old standing clock at my grandparents' house, and these days I can fix most things. I'm a railfan, I like long road trips, and my cameras have come with me to ten countries on four continents. I build Lego, play board games like Avalon with friends, and will happily try the same dish at three restaurants to compare.</p>
+    </div>
+  </section>
+
+  <section id="languages">
+    <h2>Languages</h2>
+    <ul class="langs">
+      <li><b>English</b><span>I can speak.</span><em lang="zh">英</em></li>
+      <li><b>Mandarin</b><span lang="zh-Hans">我会讲</span><em lang="zh">官</em></li>
+      <li><b>Hokkien</b><span lang="nan">我会晓讲</span><em lang="zh">闽</em></li>
+      <li><b>Cantonese</b><span lang="yue">我识讲</span><em lang="zh">粤</em></li>
+    </ul>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <h3><a href="https://pairup.world">PairUp</a></h3>
+        <span class="when">2024 – present</span>
+      </div>
+      <p class="role">Founder &amp; product manager</p>
+      <p>A free study platform for international students covering STEM courses and the SAT. I wrote the site and brought together contributors from across China. It has course notes, SAT practice sets, an error bank, a shared wiki and a project gallery. 24 people have contributed through v4.0, and it has served about 300 users.</p>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <h3><a href="https://oralhistory.pairup.world/listen.html">Southern Voices</a></h3>
+        <span class="when">2026 – present</span>
+      </div>
+      <p class="role">Project lead, interviewer &amp; website editor</p>
+      <p>An oral history site about migration in my family: three interviews with audio, stories, selected quotes and draft Chinese–English transcripts. Hearing relatives tell their stories in their own voices taught me to follow the conversation instead of my list of questions.</p>
+    </div>
+  </section>
+
+  <section id="research">
+    <h2>Research</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <h3>Content Hidden Behind Execution</h3>
+        <span class="when">2025 – 2026</span>
+      </div>
+      <p class="role">Second author, with Prof. Jialu Zhang, University of Waterloo</p>
+      <p>A safety audit of 500 public Scratch projects. In 467 of them, you had to run or interact with the project before its main safety-relevant signal showed up, because the metadata alone wasn't enough. I screened projects, removed duplicates, reviewed AI labels and flagged cases. Submitted to AAAI-27.</p>
+      <p class="src"><a href="https://arxiv.org/abs/2607.03700">https://arxiv.org/abs/2607.03700</a></p>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <h3>One Pixel Short</h3>
+        <span class="when">2025 – 2026</span>
+      </div>
+      <p class="role">First author &amp; experimental lead</p>
+      <p>Why the same Scratch program with the same inputs can behave differently across browsers and display settings. I tested 473 games in 3 browsers, traced the differences in collision detection back to pixel rendering, and designed and checked fixes. Wrote a 12-page paper with a co-author. Now in Macao's selection round for ISEF.</p>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <h3>ScratchWorld</h3>
+        <span class="when">2025 – 2026</span>
+      </div>
+      <p class="role">Independent research, first author</p>
+      <p>Can AI models predict what changes in a program after an action? I built 892 Scratch-based tests, wrote replay and scoring tools, and evaluated 7 models. Some models scored 91.4% accuracy just by copying the starting state, so I designed a value-aware changed-field F1 metric that checks whether they got the actual changes right.</p>
+    </div>
+  </section>
+
+  <section id="economics">
+    <h2>Economics</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <h3>International Economics Olympiad</h3>
+        <span class="when">2026</span>
+      </div>
+      <p class="role">Macao team captain &amp; peer instructor</p>
+      <p>Represented Macao and won an individual bronze medal. Before the competition I taught four sessions for the team on oligopoly, game theory and basic economics.</p>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <h3>Economics Competition Society &amp; Financial Intelligence Club</h3>
+        <span class="when">2025 – present</span>
+      </div>
+      <p class="role">Founder (ECS), NEC team captain (FIC), Pui Ching</p>
+      <p>Started a 15-member economics club at school, shared practice material through PairUp, and tutored teammates in economics and international trade.</p>
+    </div>
+  </section>
+
+  <section id="other">
+    <h2>Other</h2>
+    <ul class="rows">
+      <li><span class="what"><b>CodeSource Winter Training Camp</b> <span>Two weeks of C++ competitive programming</span></span><span class="when">2026</span></li>
+      <li><span class="what"><b>Pui Ching English Channel</b> <span>Directed, filmed and edited a short film about perfectionism</span></span><span class="when">2026</span></li>
+      <li><span class="what"><b>International AI Elite Programming Contest, Hong Kong</b> <span>Bilingual volunteer for 32 contestants</span></span><span class="when">2025</span></li>
+    </ul>
+  </section>
+
+  <section id="awards">
+    <h2>Awards</h2>
+    <ul class="rows">
+      <li><span class="what"><b>CSP-S</b> <span>China Computer Federation, First Prize</span></span><span class="when">2025</span></li>
+      <li><span class="what"><b>NOIP</b> <span>National Olympiad in Informatics in Provinces, Second Prize</span></span><span class="when">2025</span></li>
+      <li><span class="what"><b>USA Computing Olympiad</b> <span>Gold Division</span></span><span class="when">2025</span></li>
+      <li><span class="what"><b>International Economics Olympiad</b> <span>Individual Bronze Medal</span></span><span class="when">2026</span></li>
+      <li><span class="what"><b>Macao Economics Olympiad</b> <span>Individual Champion, Team Champion, Team Case Runner-up</span></span><span class="when">2026</span></li>
+    </ul>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <ul class="rows">
+      <li><span class="what"><b>Pui Ching Middle School</b> <span>Macao</span></span><span class="when">2025 – 2027</span></li>
+      <li><span class="what"><b>Stanford Summer Session</b> <span>Stanford, CA</span></span><span class="when">Summer 2025</span></li>
+      <li><span class="what"><b>Shenzhen College of International Education</b> <span>Shenzhen</span></span><span class="when">2023 – 2025</span></li>
+    </ul>
+  </section>
+
+  <section id="photos">
+    <h2>Photos</h2>
+    <p class="photos-note">Taken on my travels.</p>
+    <div class="gallery">
+      <figure><a href="photos/tokyo-fuji.jpg"><img src="photos/tokyo-fuji-sm.jpg" alt="Mt Fuji at sunset, seen across Tokyo" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Mt Fuji from Shibuya, Tokyo<span>2024</span></figcaption></figure>
+      <figure><a href="photos/stanford-arcade.jpg"><img src="photos/stanford-arcade-sm.jpg" alt="Palm-lined walkway at Stanford" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Stanford<span>2025</span></figcaption></figure>
+      <figure><a href="photos/taipei-jiufen.jpg"><img src="photos/taipei-jiufen-sm.jpg" alt="Hillside houses in Jiufen" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Jiufen, Taiwan<span>2024</span></figcaption></figure>
+      <figure><a href="photos/tokyo-lattice.jpg"><img src="photos/tokyo-lattice-sm.jpg" alt="Sunlight through lattice windows" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Tokyo<span>2025</span></figcaption></figure>
+      <figure><a href="photos/singapore-supertrees.jpg"><img src="photos/singapore-supertrees-sm.jpg" alt="Supertrees lit up at dusk" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Gardens by the Bay, Singapore<span>2024</span></figcaption></figure>
+      <figure><a href="photos/taipei-clouds.jpg"><img src="photos/taipei-clouds-sm.jpg" alt="Sunrise above a sea of clouds" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Above the clouds, Taipei<span>2024</span></figcaption></figure>
+      <figure><a href="photos/shanghai-cathedral.jpg"><img src="photos/shanghai-cathedral-sm.jpg" alt="Xujiahui Cathedral under a blue sky" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Xujiahui, Shanghai<span>2026</span></figcaption></figure>
+      <figure><a href="photos/stanford-hoover.jpg"><img src="photos/stanford-hoover-sm.jpg" alt="Hoover Tower with the sun behind trees" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Hoover Tower, Stanford<span>2025</span></figcaption></figure>
+      <figure><a href="photos/xiamen-bridge.jpg"><img src="photos/xiamen-bridge-sm.jpg" alt="A bridge over still water in golden light" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Xiamen<span>2024</span></figcaption></figure>
+      <figure><a href="photos/shanghai-night.jpg"><img src="photos/shanghai-night-sm.jpg" alt="Lujiazui towers at night" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Lujiazui, Shanghai<span>2024</span></figcaption></figure>
+      <figure><a href="photos/macao-sunset.jpg"><img src="photos/macao-sunset-sm.jpg" alt="An orange sunset over Macao" width="720" height="540" loading="lazy" decoding="async"></a><figcaption>Macao<span>2025</span></figcaption></figure>
+      <figure><a href="photos/hongkong-harbour.jpg"><img src="photos/hongkong-harbour-sm.jpg" alt="A boat crossing open water" width="540" height="720" loading="lazy" decoding="async"></a><figcaption>Hong Kong<span>2024</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section id="music">
+    <h2>On repeat</h2>
+    <ul class="songs">
+      <li><span class="song"><b>West Coast</b><span>Lana Del Rey</span></span><span class="listen"><a href="https://open.spotify.com/track/5Y6nVaayzitvsD5F7nr3DV" target="_blank" rel="noopener">Spotify</a><a href="https://music.youtube.com/watch?v=oKxuiw3iMBE" target="_blank" rel="noopener">YouTube Music</a></span></li>
+      <li><span class="song"><b>Pyramids</b><span>Frank Ocean</span></span><span class="listen"><a href="https://open.spotify.com/track/4QhWbupniDd44EDtnh2bFJ" target="_blank" rel="noopener">Spotify</a><a href="https://music.youtube.com/watch?v=dMV31MWIjLE" target="_blank" rel="noopener">YouTube Music</a></span></li>
+      <li><span class="song"><b lang="zh-Hant">太聰明</b><span lang="zh-Hant">陳綺貞</span></span><span class="listen"><a href="https://open.spotify.com/track/4DCB1S7G6SmH9qlDpEVIzP" target="_blank" rel="noopener">Spotify</a><a href="https://music.youtube.com/watch?v=uaqypTNjtFo" target="_blank" rel="noopener">YouTube Music</a></span></li>
+      <li><span class="song"><b lang="zh-Hant">志明與春嬌</b><span lang="zh-Hant">五月天</span></span><span class="listen"><a href="https://open.spotify.com/track/1QYdanf1Ll0Xz6WjfLmyq8" target="_blank" rel="noopener">Spotify</a><a href="https://music.youtube.com/watch?v=Toh_u0srFa8" target="_blank" rel="noopener">YouTube Music</a></span></li>
+      <li><span class="song"><b>Let Me Go</b><span>Daniel Caesar</span></span><span class="listen"><a href="https://open.spotify.com/track/3ym8ajVmKm6Fybgov3WBI5" target="_blank" rel="noopener">Spotify</a><a href="https://music.youtube.com/watch?v=UMtEAAZhgrM" target="_blank" rel="noopener">YouTube Music</a></span></li>
+    </ul>
+  </section>
+
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Photo">
+  <img alt="">
+  <p class="lb-cap"></p>
+  <button type="button" class="lb-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</dialog>
+
+<footer>
+  <h2>Say hello</h2>
+  <p>Questions about PairUp, research, or anything here are welcome.</p>
+  <ul class="contact">
+    <li><span>Email</span><a class="accent" href="mailto:linyufeng876@gmail.com">linyufeng876@gmail.com</a></li>
+    <li><span>WeChat</span><button type="button" class="copy" data-copy="uhonglim" title="Copy WeChat ID">uhonglim</button></li>
+    <li><span>Instagram</span><a href="https://www.instagram.com/uhonglim/" target="_blank" rel="noopener">@uhonglim</a></li>
+    <li><span>GitHub</span><a href="https://github.com/uhonglim" target="_blank" rel="noopener">github.com/uhonglim</a></li>
+  </ul>
+  <small>© 2026 Alan Lin</small>
+</footer>
+
+<script>
+  (function () {
+    var bar = document.getElementById('bar');
+    var menu = document.getElementById('menu');
+    var nav = document.getElementById('nav');
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+
+    function onScroll() { bar.classList.toggle('scrolled', window.scrollY > 8); }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    function setOpen(open) {
+      bar.classList.toggle('open', open);
+      menu.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    menu.addEventListener('click', function () { setOpen(!bar.classList.contains('open')); });
+    links.forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    document.addEventListener('click', function (e) { if (!bar.contains(e.target)) setOpen(false); });
+
+    document.getElementById('theme').addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = root.dataset.theme
+        ? root.dataset.theme === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var next = isDark ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+
+    // Photo lightbox: click a photo to see it large; arrows move, Esc or click closes.
+    var lb = document.getElementById('lightbox');
+    var figs = Array.prototype.slice.call(document.querySelectorAll('.gallery figure'));
+    var at = 0;
+    function show(i) {
+      at = (i + figs.length) % figs.length;
+      var a = figs[at].querySelector('a'), cap = figs[at].querySelector('figcaption');
+      var img = lb.querySelector('img');
+      img.src = a.getAttribute('href');
+      img.alt = figs[at].querySelector('img').alt;
+      lb.querySelector('.lb-cap').textContent = cap.firstChild.textContent + ' · ' + cap.querySelector('span').textContent;
+    }
+    if (lb && typeof lb.showModal === 'function') {
+      figs.forEach(function (f, i) {
+        f.querySelector('a').addEventListener('click', function (e) { e.preventDefault(); show(i); lb.showModal(); });
+      });
+      lb.addEventListener('click', function (e) { if (e.target === lb || e.target.closest('.lb-close')) lb.close(); });
+      lb.querySelector('img').addEventListener('click', function () { show(at + 1); });
+      document.addEventListener('keydown', function (e) {
+        if (!lb.open) return;
+        if (e.key === 'ArrowRight') show(at + 1);
+        if (e.key === 'ArrowLeft') show(at - 1);
+      });
+    }
+
+    // Click the WeChat ID to copy it.
+    Array.prototype.forEach.call(document.querySelectorAll('.copy'), function (b) {
+      b.addEventListener('click', function () {
+        var text = b.getAttribute('data-copy');
+        function done() { b.classList.add('done'); setTimeout(function () { b.classList.remove('done'); }, 1600); }
+        try {
+          navigator.clipboard.writeText(text).then(done, function () {});
+        } catch (e) {}
+      });
+    });
+
+    links = links.filter(function (a) { return a.getAttribute('href').charAt(0) === '#'; });
+    var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    function spy() {
+      var y = window.scrollY + window.innerHeight * 0.35;
+      var current = -1;
+      sections.forEach(function (s, i) { if (s && s.offsetTop <= y) current = i; });
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 2) current = sections.length - 1;
+      links.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+    }
+    spy();
+    window.addEventListener('scroll', spy, { passive: true });
+    window.addEventListener('resize', spy);
+  })();
+</script>
+</body>
+</html>
