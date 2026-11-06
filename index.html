@@ -16,6 +16,9 @@
 <meta property="og:url" content="https://uhonglim.github.io/">
 <meta property="og:image" content="https://uhonglim.github.io/alan.jpg">
 <link rel="canonical" href="https://uhonglim.github.io/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..600&display=swap" rel="stylesheet">
 <meta name="twitter:card" content="summary">
 <script>
   try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -28,6 +31,7 @@
   :root {
     --bg: #ffffff;
     --text: #2a2826;
+    --body: #46423d;      /* paragraphs */
     --muted: #6b665f;
     --faint: #78736c;
     --rule: #eeebe6;
@@ -42,7 +46,7 @@
     --sky-3: rgba(246, 190, 140, 0.06);
 
     --bar: rgba(255, 255, 255, 0.82);
-    --sans: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    --sans: "Inter", "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
     --maxw: 1000px;
     --bar-h: 60px;
     color-scheme: light;
@@ -51,6 +55,7 @@
     :root:not([data-theme="light"]) {
       --bg: #151515;
       --text: #ebe8e3;
+      --body: #cfcbc5;
       --muted: #a29d96;
       --faint: #8c877f;
       --rule: #272625;
@@ -68,6 +73,7 @@
   :root[data-theme="dark"] {
     --bg: #151515;
     --text: #ebe8e3;
+    --body: #cfcbc5;
     --muted: #a29d96;
     --faint: #8c877f;
     --rule: #272625;
@@ -91,6 +97,8 @@
     color: var(--text);
     font: 16px/1.8 var(--sans);
     -webkit-font-smoothing: antialiased;
+    font-optical-sizing: auto;
+    font-feature-settings: "cv11", "ss03";
     position: relative;
   }
   /* Blue-hour haze at the very top of the page; fades out before the first section. */
@@ -178,7 +186,7 @@
     font-size: clamp(34px, 4.6vw, 46px); line-height: 1.2; font-weight: 500;
     letter-spacing: -0.01em; margin: 0 0 22px;
   }
-  .hero p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.85; max-width: 470px; }
+  .hero p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.85; max-width: 470px; }
 
   section { padding: 64px 0; border-top: 1px solid var(--rule); }
   section > h2 {
@@ -187,7 +195,7 @@
   }
 
   .prose { max-width: 620px; }
-  .prose p { margin: 0 0 20px; font-size: 16px; }
+  .prose p { margin: 0 0 20px; font-size: 16px; color: var(--body); }
   .prose p:last-child { margin-bottom: 0; }
   .langs { list-style: none; margin: 0; padding: 0; max-width: 420px; }
   .langs li {
@@ -208,7 +216,7 @@
   .entry h3 a:hover { color: var(--orange); }
   .when { flex-shrink: 0; font-size: 13px; color: var(--faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .role { margin: 2px 0 10px; font-size: 14px; color: var(--twilight); }
-  .entry p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+  .entry p { margin: 0; color: var(--body); font-size: 15px; line-height: 1.8; }
   .entry .src { margin-top: 10px; font-size: 13.5px; }
   .src a { color: var(--orange); }
   .src a:hover { opacity: .75; }
@@ -225,7 +233,7 @@
 
   footer { max-width: var(--maxw); margin: 0 auto; padding: 64px 24px 72px; border-top: 1px solid var(--rule); }
   footer h2 { font-size: 22px; font-weight: 500; letter-spacing: -0.005em; margin: 0 0 10px; }
-  footer p { margin: 0; color: var(--muted); font-size: 15px; }
+  footer p { margin: 0; color: var(--body); font-size: 15px; }
   .contact { list-style: none; margin: 28px 0 0; padding: 0; font-size: 15px; }
   .contact li { display: flex; align-items: baseline; padding: 5px 0; }
   .contact span { flex: 0 0 104px; font-size: 13px; color: var(--faint); }
